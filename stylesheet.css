@@ -1,0 +1,35 @@
+h1 {
+    text-align: center;
+}
+.calculator {
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+  background-color: aliceblue;
+  padding: 20px;
+  border-radius: 20px;
+  margin: auto;
+}
+
+button {
+  flex: 1 1 0;
+  height: 30px;
+  margin: 5px;
+  font-weight: bold;
+}
+
+#enter {
+  width: 200px;
+  flex: 1 1 0;
+}
+
+.row {
+  display: flex;
+}
+
+.screen {
+  min-height: 50px;
+  font-size: 30px;
+  text-align: right;
+  margin: 0px 5px;  
+}
