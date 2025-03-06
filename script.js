@@ -16,9 +16,13 @@ function divide(a, b) {
 
 function operate(a, b, operand) {
   let result;
-  a = parseInt(a);
-  b === "" ? (b = 0) : (b = parseInt(b));
-  if (operand === "") operand = 0;
+  a = parseFloat(a);
+  if (b === "") {
+    return a;
+  } else {
+    b = parseFloat(b);
+  }
+  
   switch (operand) {
     case "+":
       result = add(a, b);
@@ -33,7 +37,10 @@ function operate(a, b, operand) {
       result = divide(a, b);
       break;
   }
-  return result;
+  if (result % 1 > 0) {
+    return result;
+  }
+  return parseInt(result);
 }
 
 function screenUpdate() {
@@ -44,6 +51,9 @@ function screenUpdate() {
 
   const buttons = document.querySelector(".buttons");
   const screenTxt = document.querySelector(".screen");
+  const dotBtn = document.querySelector("#decimal");
+  const details = document.createElement("p");
+  document.querySelector(".calculator").appendChild(details);
 
   buttons.addEventListener("click", (e) => {
     const numbers = "0123456789".split("");
@@ -60,8 +70,7 @@ function screenUpdate() {
         result = operate(lastNum, currNum, operand);
         screenTxt.innerText = result;
         lastNum = result;
-        operand = "+";
-        currNum = "0";
+        currNum = "";
       } else {
         operand = btnTxt;
         if (lastNum === "") {
@@ -73,14 +82,25 @@ function screenUpdate() {
         }
         currNum = "";
       }
+      if (dotBtn.disabled === true) dotBtn.disabled = false;
     }
 
     if (btnTxt === "AC") {
       lastNum = "";
       operand = "";
       currNum = "";
+      result = "";
       screenTxt.innerText = "0";
     }
+
+    if (btnTxt === ".") {
+      if (!currNum.includes(".")) {
+        currNum += btnTxt;
+        dotBtn.disabled = true;
+      }
+    }
+
+    details.innerText = `lastNum: ${lastNum}\ncurrNum: ${currNum}\noperand: ${operand}\nresult: ${result}`;
   });
 }
 
