@@ -22,7 +22,7 @@ function operate(a, b, operand) {
   } else {
     b = parseFloat(b);
   }
-  
+
   switch (operand) {
     case "+":
       result = add(a, b);
@@ -38,7 +38,7 @@ function operate(a, b, operand) {
       break;
   }
   if (result % 1 > 0) {
-    return result;
+    return result.toFixed(2);
   }
   return parseInt(result);
 }
@@ -52,25 +52,23 @@ function screenUpdate() {
   const buttons = document.querySelector(".buttons");
   const screenTxt = document.querySelector(".screen");
   const dotBtn = document.querySelector("#decimal");
-  const details = document.createElement("p");
-  document.querySelector(".calculator").appendChild(details);
+  const numbers = "0123456789".split("");
+  const operands = "+-*/=".split("");
+  // const details = document.createElement("p");
+  // document.querySelector(".calculator").appendChild(details);
 
-  buttons.addEventListener("click", (e) => {
-    const numbers = "0123456789".split("");
-    const operands = "+-*/=".split("");
-    let btnTxt = e.target.innerText;
-
+  function calculatorLogic(btnTxt) {
     if (numbers.includes(btnTxt)) {
       currNum += btnTxt;
       screenTxt.innerText = currNum;
     }
-
+  
     if (operands.includes(btnTxt)) {
-      if (btnTxt === "=") {
+      if (btnTxt === "=" && lastNum && currNum) {
         result = operate(lastNum, currNum, operand);
         screenTxt.innerText = result;
-        lastNum = result;
-        currNum = "";
+        lastNum = "";
+        currNum = result;
       } else {
         operand = btnTxt;
         if (lastNum === "") {
@@ -84,7 +82,7 @@ function screenUpdate() {
       }
       if (dotBtn.disabled === true) dotBtn.disabled = false;
     }
-
+  
     if (btnTxt === "AC") {
       lastNum = "";
       operand = "";
@@ -92,16 +90,28 @@ function screenUpdate() {
       result = "";
       screenTxt.innerText = "0";
     }
-
+  
     if (btnTxt === ".") {
       if (!currNum.includes(".")) {
         currNum += btnTxt;
         dotBtn.disabled = true;
       }
     }
+  }
 
-    details.innerText = `lastNum: ${lastNum}\ncurrNum: ${currNum}\noperand: ${operand}\nresult: ${result}`;
+  buttons.addEventListener("click", (e) => {    
+    let btnTxt = e.target.innerText;
+    calculatorLogic(btnTxt);
+    // details.innerText = `lastNum: ${lastNum}\ncurrNum: ${currNum}\noperand: ${operand}\nresult: ${result}`;
   });
+
+  document.addEventListener("keyup", (e) => {
+    let btnTxt = e.key;
+    if (btnTxt === "Enter" || btnTxt === "NumpadEnter") {
+      btnTxt = "=";
+    }
+    calculatorLogic(btnTxt);
+  })
 }
 
 screenUpdate();
